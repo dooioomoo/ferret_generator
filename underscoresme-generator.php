@@ -1,33 +1,33 @@
 <?php
 /**
- * Plugin Name: Underscores.me Generator
+ * Plugin Name: Ferrete Generator
  * Description: Generates themes based on the _s theme.
  */
 
-class Underscores_Generator_Plugin {
+class Ferret_Generator_Plugin {
 
 	protected $theme;
 
 	/**
-	 * Fired when file is loaded.
+	 * Fired when file is loaded.	
 	 */
 	function __construct() {
 		// All the black magic is happening in these actions.
 		add_action( 'init', array( $this, 'init' ) );
-		add_filter( 'underscoresme_generator_file_contents', array( $this, 'do_replacements' ), 10, 2 );
+		add_filter( 'ferretcore_generator_file_contents', array( $this, 'do_replacements' ), 10, 2 );
 
-		// Use do_action( 'underscoresme_print_form' ); in your theme to render the form.
-		add_action( 'underscoresme_print_form', array( $this, 'underscoresme_print_form' ) );
+		// Use do_action( 'ferretcore_print_form' ); in your theme to render the form.
+		add_action( 'ferretcore_print_form', array( $this, 'ferretcore_print_form' ) );
 	}
 
 	/**
 	 * Renders the generator form
 	 */
-	function underscoresme_print_form() {
+	function ferretcore_print_form() {
 		?>
 		<div id="generator-form" class="generator-form-skinny">
 			<form method="POST">
-				<input type="hidden" name="underscoresme_generate" value="1" />
+				<input type="hidden" name="ferretcore_generate" value="1" />
 
 				<?php if ( isset( $_REQUEST['can_i_haz_wpcom'] ) ) : ?>
 					<input type="hidden" name="can_i_haz_wpcom" value="1" />
@@ -35,33 +35,33 @@ class Underscores_Generator_Plugin {
 
 				<section class="generator-form-inputs">
 					<section class="generator-form-primary">
-						<label for="underscoresme-name">Theme Name</label>
-						<input type="text" id="underscoresme-name" name="underscoresme_name" placeholder="Theme Name" />
+						<label for="ferretcore-name">Theme Name</label>
+						<input type="text" id="ferretcore-name" name="ferretcore_name" placeholder="Theme Name" />
 					</section><!-- .generator-form-primary -->
 
 					<section class="generator-form-secondary">
-						<label for="underscoresme-slug">Theme Slug</label>
-						<input type="text" id="underscoresme-slug" name="underscoresme_slug" placeholder="Theme Slug" />
+						<label for="ferretcore-slug">Theme Slug</label>
+						<input type="text" id="ferretcore-slug" name="ferretcore_slug" placeholder="Theme Slug" />
 
-						<label for="underscoresme-author">Author</label>
-						<input type="text" id="underscoresme-author" name="underscoresme_author" placeholder="Author" />
+						<label for="ferretcore-author">Author</label>
+						<input type="text" id="ferretcore-author" name="ferretcore_author" placeholder="Author" />
 
-						<label for="underscoresme-author-uri">Author URI</label>
-						<input type="text" id="underscoresme-author-uri" name="underscoresme_author_uri" placeholder="Author URI" />
+						<label for="ferretcore-author-uri">Author URI</label>
+						<input type="text" id="ferretcore-author-uri" name="ferretcore_author_uri" placeholder="Author URI" />
 
-						<label for="underscoresme-description">Description</label>
-						<input type="text" id="underscoresme-description" name="underscoresme_description" placeholder="Description" />
+						<label for="ferretcore-description">Description</label>
+						<input type="text" id="ferretcore-description" name="ferretcore_description" placeholder="Description" />
 
-						<input type="checkbox" id="underscoresme-woocommerce" name="underscoresme_woocommerce" value="1">
-						<label for="underscoresme-woocommerce">WooCommerce boilerplate</label>
+						<input type="checkbox" id="ferretcore-woocommerce" name="ferretcore_woocommerce" value="1">
+						<label for="ferretcore-woocommerce">WooCommerce boilerplate</label>
 
-						<input type="checkbox" id="underscoresme-sass" name="underscoresme_sass" value="1">
-						<label for="underscoresme-sass">_sassify!</label>
+						<input type="checkbox" id="ferretcore-sass" name="ferretcore_sass" value="1">
+						<label for="ferretcore-sass">_sassify!</label>
 					</section><!-- .generator-form-secondary -->
 				</section><!-- .generator-form-inputs -->
 
 				<div class="generator-form-submit">
-					<input type="submit" name="underscoresme_generate_submit" value="Generate" />
+					<input type="submit" name="ferretcore_generate_submit" value="Generate" />
 					<span class="generator-form-version">Based on <a href="http://github.com/automattic/_s">_s from github</a></span>
 				</div><!-- .generator-form-submit -->
 			</form>
@@ -73,10 +73,10 @@ class Underscores_Generator_Plugin {
 	 * Creates zip files and does a bunch of other stuff.
 	 */
 	function init() {
-		if ( ! isset( $_REQUEST['underscoresme_generate'], $_REQUEST['underscoresme_name'] ) )
+		if ( ! isset( $_REQUEST['ferretcore_generate'], $_REQUEST['ferretcore_name'] ) )
 			return;
 
-		if ( empty( $_REQUEST['underscoresme_name'] ) )
+		if ( empty( $_REQUEST['ferretcore_name'] ) )
 			wp_die( 'Please enter a theme name. Please go back and try again.' );
 
 		$this->theme = array(
@@ -90,14 +90,14 @@ class Underscores_Generator_Plugin {
 			'wpcom'       => false,
 		);
 
-		$this->theme['name']        = trim( $_REQUEST['underscoresme_name'] );
+		$this->theme['name']        = trim( $_REQUEST['ferretcore_name'] );
 		$this->theme['slug']        = sanitize_title_with_dashes( $this->theme['name'] );
-		$this->theme['sass']        = (bool) isset( $_REQUEST['underscoresme_sass'] );
-		$this->theme['woocommerce'] = (bool) isset( $_REQUEST['underscoresme_woocommerce'] );
+		$this->theme['sass']        = (bool) isset( $_REQUEST['ferretcore_sass'] );
+		$this->theme['woocommerce'] = (bool) isset( $_REQUEST['ferretcore_woocommerce'] );
 		$this->theme['wpcom']       = (bool) isset( $_REQUEST['can_i_haz_wpcom'] );
 
-		if ( ! empty( $_REQUEST['underscoresme_slug'] ) ) {
-			$this->theme['slug'] = sanitize_title_with_dashes( $_REQUEST['underscoresme_slug'] );
+		if ( ! empty( $_REQUEST['ferretcore_slug'] ) ) {
+			$this->theme['slug'] = sanitize_title_with_dashes( $_REQUEST['ferretcore_slug'] );
 		}
 
 		// Let's check if the slug can be a valid function name.
@@ -105,20 +105,20 @@ class Underscores_Generator_Plugin {
 			wp_die( 'Theme slug could not be used to generate valid function names. Please go back and try again.' );
 		}
 
-		if ( ! empty( $_REQUEST['underscoresme_description'] ) ) {
-			$this->theme['description'] = trim( $_REQUEST['underscoresme_description'] );
+		if ( ! empty( $_REQUEST['ferretcore_description'] ) ) {
+			$this->theme['description'] = trim( $_REQUEST['ferretcore_description'] );
 		}
 
-		if ( ! empty( $_REQUEST['underscoresme_author'] ) ) {
-			$this->theme['author'] = trim( $_REQUEST['underscoresme_author'] );
+		if ( ! empty( $_REQUEST['ferretcore_author'] ) ) {
+			$this->theme['author'] = trim( $_REQUEST['ferretcore_author'] );
 		}
 
-		if ( ! empty( $_REQUEST['underscoresme_author_uri'] ) ) {
-			$this->theme['author_uri'] = trim( $_REQUEST['underscoresme_author_uri'] );
+		if ( ! empty( $_REQUEST['ferretcore_author_uri'] ) ) {
+			$this->theme['author_uri'] = trim( $_REQUEST['ferretcore_author_uri'] );
 		}
 
 		$zip = new ZipArchive;
-		$zip_filename = sprintf( dirname( __FILE__ ) .'/tmp/underscoresme-%s.zip', md5( print_r( $this->theme, true ) ) );
+		$zip_filename = sprintf( dirname( __FILE__ ) .'/tmp/ferretcore-%s.zip', md5( print_r( $this->theme, true ) ) );
 		$res = $zip->open( $zip_filename, ZipArchive::CREATE && ZipArchive::OVERWRITE );
 
 		$prototype_dir = dirname( __FILE__ ) . '/prototype/';
@@ -184,7 +184,7 @@ class Underscores_Generator_Plugin {
 			}
 
 			$contents = file_get_contents( $filename );
-			$contents = apply_filters( 'underscoresme_generator_file_contents', $contents, $local_filename );
+			$contents = apply_filters( 'ferretcore_generator_file_contents', $contents, $local_filename );
 			$zip->addFromString( trailingslashit( $this->theme['slug'] ) . $local_filename, $contents );
 		}
 
@@ -261,7 +261,7 @@ class Underscores_Generator_Plugin {
 		// Special treatment for readme.txt
 		if ( 'readme.txt' == $filename ) {
 			$contents = preg_replace('/(?<=Description ==) *.*?(.*(?=(== Installation)))/s', "\n\n" . $this->theme['description'] . "\n\n", $contents );
-			$contents = str_replace( '_s, or underscores', $this->theme['name'], $contents );
+			$contents = str_replace( '_s, or Ferret', $this->theme['name'], $contents );
 		}
 
 		// Function names can not contain hyphens.
@@ -301,9 +301,9 @@ class Underscores_Generator_Plugin {
 
 		wp_remote_get( add_query_arg( array(
 			'v'                         => 'wpcom-no-pv',
-			'x_underscoresme-downloads' => $user_agent,
-			'x_underscoresme-features'  => implode( ',', $features ),
+			'x_ferretcore-downloads' => $user_agent,
+			'x_ferretcore-features'  => implode( ',', $features ),
 		), 'http://stats.wordpress.com/g.gif' ), array( 'blocking' => false ) );
 	}
 }
-new Underscores_Generator_Plugin;
+new Ferret_Generator_Plugin;
