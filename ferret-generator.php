@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Ferrete Generator
- * Description: Generates themes based on the _s theme.
+ * Plugin Name: Ferret Generator
+ * Description: Generates themes based on the _ferret theme.
  */
 
 class Ferret_Generator_Plugin {
@@ -17,7 +17,7 @@ class Ferret_Generator_Plugin {
 		add_filter( 'ferretcore_generator_file_contents', array( $this, 'do_replacements' ), 10, 2 );
 
 		// Use do_action( 'ferretcore_print_form' ); in your theme to render the form.
-		add_action( 'ferretcore_print_form', array( $this, 'ferretcore_print_form' ) );
+		add_action( 'ferret_print_form', array( $this, 'ferretcore_print_form' ) );
 	}
 
 	/**
@@ -62,8 +62,7 @@ class Ferret_Generator_Plugin {
 
 				<div class="generator-form-submit">
 					<input type="submit" name="ferretcore_generate_submit" value="Generate" />
-					<span class="generator-form-version">Based on <a href="http://github.com/automattic/_s">_s from github</a></span>
-				</div><!-- .generator-form-submit -->
+									</div><!-- .generator-form-submit -->
 			</form>
 		</div><!-- .generator-form -->
 		<?php
@@ -121,10 +120,10 @@ class Ferret_Generator_Plugin {
 		$zip_filename = sprintf( dirname( __FILE__ ) .'/tmp/ferretcore-%s.zip', md5( print_r( $this->theme, true ) ) );
 		$res = $zip->open( $zip_filename, ZipArchive::CREATE && ZipArchive::OVERWRITE );
 
-		$prototype_dir = dirname( __FILE__ ) . '/prototype/';
+		$prototype_dir = dirname( __FILE__ ) . '/prototype/wp_ferret/';
 
 		$exclude_files = array( '.travis.yml', 'codesniffer.ruleset.xml', '.jscsrc', '.jshintignore', 'CONTRIBUTING.md', '.git', '.svn', '.DS_Store', '.gitignore', '.', '..' );
-		$exclude_directories = array( '.git', '.svn', '.github', '.', '..' );
+		$exclude_directories = array( '.git', '.svn', '.github', 'SOURCE', '.', '..' );
 
 		if ( ! $this->theme['sass'] ) {
 			$exclude_directories[] = 'sass';
